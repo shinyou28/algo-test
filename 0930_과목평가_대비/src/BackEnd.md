@@ -14,7 +14,16 @@ public class SsafyServlet extends HttpServlet {
 ```  
 ### 3. Dynamic Web Project 생성 시 Web Application 실행에 필요한 다양한 파일을 저장하게된다. Library, HTML, CSS, Javascript, web.xml 등이 존재하는데 이 폴더는 외부 URL을 통해 접근할 수 없으며, web.xml이 저장되는 폴더를 작성하시오. 다음 설명에 해당하는 적절한 용어를 작성하시오.
     : WEB-INF
-### 4. O/X
+### 4. 포워드 vs 리다이렉트 O/X
+    - 포워드 방식 : 요청이 들어오면 요청을 받은 JSP 또는 Servlet이 직접 응답을 작성하지 않고, 요청을 서버 내부에서 전달하여 해당 요청을 처리하게 하는 방식
+    ```
+    RequestDispatcher dispatcher = request.getRequestDispatcher("이동할 페이지");
+    dispatcher.foward(request, response);
+    ```
+    - 리다이렉트 방식 : 요청이 들어오면 내부 로직 실행 후, 브라우저의 URL을 변경하도록 하여 새로운 요청을 생성함으로써 페이지를 이동한다.
+    ```
+    response.sendRedirect("location");
+    ```
     - 포워드 방식은 클라이언트가 새로운 요청을 보낸다.
     X : 포워드 방식은 서버 내부에서 요청을 다른 리소스로 전달하는 방식이므로 클라이언트가 새로운 요청을 보내지 않는다.
     - 포워드 방식은 서버 내부에서만 요청이 전달된다.
@@ -24,6 +33,17 @@ public class SsafyServlet extends HttpServlet {
     X : 기존의 요청과 응답이 유지되며, 새로운 요청과 응답 객체가 생성되지 않는다.
 ### 5. setMaxAge(int seconds) : 쿠키의 유효기간을 초 단위로 설정하는 메서드, 0으로 설정하면 쿠키는 즉시 삭제된다.
 ### 6. 세션 or 쿠키 관련 질문 O/X
+    - Cookie
+        1. 웹 서버가 클라이언트의 웹 브라우저에 저장하는 데이터 조각
+        2. 필요에 따라 요청시 서버로 같이 전송
+        3. key : value 형태의 문자열 데이터
+        4. 웹 브라우저(클라이언트) 별로 별도의 쿠키 생성
+        5. 클라이언트에 최대 300개 쿠키
+        6. 하나의 도메인당 20개 쿠키
+        7. 쿠키 하나당 4KB 제한
+    - Session
+        1. 메모리 제한 없음
+        2. 각 세션은 sessionid를 이용해 구분
     - 클라이언트의 요청 정보를 저장하기 위해 사용한다.
     X : 요청 정보는 HttpServletRequest 객체에서 관리
     - 클라이언트와 서버 간의 세션을 유지하기 위해 사용한다.
