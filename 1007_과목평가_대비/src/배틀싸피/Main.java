@@ -16,6 +16,10 @@ public class Main {
         while (gameData.length() > 0) {
             System.out.printf("----입력데이터----\n%s\n----------------\n", gameData);
             parseData(gameData);
+            
+            // 파싱한 데이터 화면에 구현(코드 생략)
+            
+//            String output = "S";  // 알고리즘 결괏값이 없을 경우를 대비하여 초기값을 S로 설정
 
             int[] myPosition = {-1, -1};  // 내 탱크 위치 찾기
             for (int i = 0; i < mapData.length; i++) {
@@ -29,8 +33,8 @@ public class Main {
                 if (myPosition[0] != -1) break;
             }
 
-            // BFS로 최단 경로를 찾고, 경로를 따라 이동
-            String output = bfsFindShortestPath(myPosition[0], myPosition[1]);
+            // BFS로 최단 경로를 찾고, 경로를 따라 이동(*)
+            String output = bfs(myPosition[0], myPosition[1]);
 
             // 다음 상태 전송
             gameData = bridge.submit(output);
@@ -39,37 +43,37 @@ public class Main {
         bridge.close();
     }
 
-    // BFS 알고리즘으로 최단 경로 탐색 후 명령어 반환
-    static String bfsFindShortestPath(int startX, int startY) {
-        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};  // 상, 하, 좌, 우
-        String[] directionSymbols = {"U", "D", "L", "R"};  // 이동 방향 기호
+    // BFS 알고리즘으로 최단 경로 탐색 후 명령어 반환(*)
+    static String bfs(int x, int y) {
+        int[][] dir = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};  // 상, 하, 좌, 우
+        String[] dirSymbol = {"U", "D", "L", "R"};  // 이동 방향 기호
         boolean[][] visited = new boolean[mapData.length][mapData[0].length];  // 방문 여부
         int[][] previous = new int[mapData.length][mapData[0].length];  // 이전 좌표 저장 (경로 추적용)
 
-        Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[]{startX, startY, -1});  // 시작점 추가, 마지막 값은 방향 추적용
-        visited[startX][startY] = true;
+        Queue<int[]> q = new LinkedList<>();
+        q.add(new int[]{x, y, -1});  // 시작점 추가, 마지막 값은 방향 추적용
+        visited[x][y] = true;
 
-        while (!queue.isEmpty()) {
-            int[] current = queue.poll();
-            int x = current[0];
-            int y = current[1];
+        while (!q.isEmpty()) {
+            int[] current = q.poll();
+            int cx = current[0];
+            int cy = current[1];
             int lastDirection = current[2];  // 이전 방향
 
-            if (mapData[x][y].equals("X")) {  // 목적지에 도달하면
-                return reconstructPath(startX, startY, x, y, previous);
+            if (mapData[cx][cy].equals("X")) {  // 목적지에 도달하면
+                return reconPath(x, y, cx, cy, previous);
             }
 
             // 4방향 탐색
             for (int i = 0; i < 4; i++) {
-                int newX = x + directions[i][0];
-                int newY = y + directions[i][1];
+                int nx = cx + dir[i][0];
+                int ny = cy + dir[i][1];
 
-                if (newX >= 0 && newY >= 0 && newX < mapData.length && newY < mapData[0].length 
-                        && !visited[newX][newY] && (mapData[newX][newY].equals("G") || mapData[newX][newY].equals("X"))) {
-                    queue.add(new int[]{newX, newY, i});  // 큐에 새 좌표 추가
-                    visited[newX][newY] = true;  // 방문 처리
-                    previous[newX][newY] = i;  // 이동한 방향 저장
+                if (nx >= 0 && ny >= 0 && nx < mapData.length && ny < mapData[0].length 
+                        && !visited[nx][ny] && (mapData[nx][ny].equals("G") || mapData[nx][ny].equals("X"))) {
+                    q.add(new int[]{nx, ny, i});  // 큐에 새 좌표 추가
+                    visited[nx][ny] = true;  // 방문 처리
+                    previous[nx][ny] = i;  // 이동한 방향 저장
                 }
             }
         }
@@ -77,8 +81,8 @@ public class Main {
         return "S";  // 경로가 없을 경우 대기
     }
 
-    // 경로를 역추적하여 명령어 생성
-    static String reconstructPath(int startX, int startY, int endX, int endY, int[][] previous) {
+    // 경로를 역추적하여 명령어 생성(*)
+    static String reconPath(int startX, int startY, int endX, int endY, int[][] previous) {
         int x = endX;
         int y = endY;
         StringBuilder path = new StringBuilder();
