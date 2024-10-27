@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.ws.model.dao.MovieDao">
+
+	<insert id="insert" parameterType="Movie" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO movies (title, director, genre, runningTime, img, orgImg)
+		VALUES (#{title}, #{director}, #{genre}, #{runningTime}, #{img}, #{orgImg});
+	</insert>
+
+	<update id="update" parameterType="Movie">
+		UPDATE movies
+		SET title = #{title}, director = #{director}, genre = #{genre}, runningTime = #{runningTime},
+			img = #{img}, orgImg = #{orgImg}
+		WHERE id = #{id};
+	</update>
+	
+	<delete id="remove" parameterType="int">
+		DELETE FROM movies
+		WHERE id = #{id};
+	</delete>
+
+	<select id="selectAll" resultType="Movie">
+		SELECT * FROM movies;
+	</select>
+	
+	<select id="searchByTitle" resultType="Movie" parameterType="String">
+		SELECT * FROM movies
+		WHERE title LIKE concat('%', #{title}, '%');
+	</select>
+	
+	<select id="selectOne" resultType="Movie" parameterType="int">
+		SELECT * FROM movies
+		WHERE id = #{id};
+	</select>
+		
+</mapper>
